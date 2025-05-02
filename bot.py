@@ -9,10 +9,10 @@ from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, Messa
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
-print("Ключ OpenRouter:", OPENROUTER_API_KEY)  # Для отладки
-print("Ключ Telegram:", TELEGRAM_TOKEN)  # Для отладки
+print("Ключ OpenRouter:", OPENROUTER_API_KEY)
+print("Ключ Telegram:", TELEGRAM_TOKEN)
 
-# Чтение базы знаний из файла рядом с bot.py
+# Загрузка базы знаний
 def load_knowledge():
     try:
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -22,7 +22,7 @@ def load_knowledge():
     except FileNotFoundError:
         return "Нет базы знаний. Пожалуйста, добавьте файл knowledge.txt."
 
-# Ответ на /start
+# Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Привет! Я бот поддержки. Задай вопрос по товарам или доставке.")
 
@@ -45,11 +45,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 {
                     "role": "system",
                     "content": (
-                        f"Ты — профессиональный и вежливый чат-бот поддержки. "
-                        f"Вот база знаний:
-{knowledge}
-"
-                        "Отвечай кратко и только по теме. Не выдумывай ответы. "
+                        f"Ты — профессиональный и вежливый чат-бот поддержки.\n"
+                        f"Вот база знаний:\n{knowledge}\n"
+                        "Отвечай кратко и строго по теме. Не выдумывай ответы. "
                         "Если информации нет в базе — скажи об этом честно."
                     )
                 },
